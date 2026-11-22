@@ -254,7 +254,7 @@ JSON-Ausgabe:
 
 src: 
 
-extractor.py: 
+**extractor.py:**
 
 In diesem Modul extractor.py definiert system_prompt über die Rolle "system" die festen Arbeitsanweisungen des Modells, seine Domänen-Persona, das verbindliche Ausgabeformat sowie die Regeln für Sonderfälle, während user_content über die Rolle "user" die dynamischen Eingabedaten des jeweiligen Aufrufs – also die formatierte Liste der rohen Studio-Nachrichten – übergibt. Innerhalb des system_prompt legt die Persona als Operations-Assistenz für die WAXCAT-Studios in Hamburg den fachlichen Kontext und die Standardisierung fest (einheitliche Studio-Namen wie 'Innenstadt', 'Eimsbüttel' und 'Wandsbek' sowie saubere Produktnamen wie 'Nitrilhandschuhe M', 'Tape' und 'Kochsalzlösung'), fügt das direkt aus deinem Pydantic-Modell erzeugte OrderExtractionResult-JSON-Schema ein und erzwingt strenge Regeln zur Datenqualität: Fehlende Mengen dürfen nicht erraten werden, unvollständige Angaben (wenn Menge oder Einheit fehlt) müssen mit quantity=null, unit=null und is_complete=false markiert werden, und für unvollständige Einträge wird automatisch eine höfliche, prägnante deutsche Rückfrage an das jeweilige Studio unter Nennung bekannter Standardeinheiten (wie z. B. Flaschen) formuliert. Im Gegensatz dazu bleibt user_content rein datenorientiert ("Process the following studio messages:\n- ..."), sodass stabile Verhaltensregeln sauber von wechselnden Chat-Nachrichten getrennt sind und OrderExtractionResult.model_validate_json(raw_json) das zurückgegebene JSON zuverlässig validieren kann.
 
@@ -262,7 +262,7 @@ Der Parameter temperature=0.0 weist das Modell an, bei jedem Generierungsschritt
 
 Auf Modulebene bereiten die Importe und load_dotenv() zu Beginn die Laufzeitumgebung vor, bevor extract_orders_from_messages aufgerufen wird: os liest den GROQ_API_KEY aus den Umgebungsvariablen, json.dumps(..., indent=2) wandelt OrderExtractionResult.model_json_schema() in gut lesbaren Text für den Prompt um, Groq stellt die Verbindung zur Groq-API her, load_dotenv() lädt während der lokalen Entwicklung die Schlüssel-Wert-Paare aus einer .env-Datei in os.environ, und OrderExtractionResult aus src.models liefert sowohl die Schemadefinition als auch die anschließende Pydantic-Validierung. Die Initialisierung von Groq(api_key=os.getenv("GROQ_API_KEY")) innerhalb der Funktion funktioniert für einfache Skripte problemlos; für höhere Lasten im Produktivbetrieb lässt sich der Client jedoch auch einmalig außerhalb der Funktion instanziieren und um Fehlerbehandlung für fehlende API-Keys sowie ungültige JSON- oder Validierungsantworten ergänzen.
 
-main.py: 
+**main.py:**
 
 Der Code in der Datei main.py ist das Hauptskript eines Automatisierungssystems, das unstrukturierte Bestellnachrichten aus verschiedenen Studios ausliest, gültige Bestellungen zusammenrechnet und unvollständige Angaben herausfiltert. Zuerst lädt das Programm notwendige Hilfsfunktionen sowie beispielhafte Bestelltexte und sendet diese an ein Sprachmodell (LLM), das auf der ultraschnellen Groq-Infrastruktur läuft. Die KI erkennt in den freien Texten, welches Studio welchen Artikel in welcher Menge bestellt hat, und wandelt diese Informationen in ein festes, maschinenlesbares Datenformat um.
 
@@ -270,7 +270,7 @@ Im nächsten Schritt übernimmt klassischer Python-Code die weitere Verarbeitung
 
 Abschließend gibt main.py die aufbereiteten Ergebnisse in zwei übersichtlichen Bereichen in der Konsole aus. Im ersten Teil erscheint eine saubere Tabelle mit der Gesamtsumme aller gültigen Artikel, während im zweiten Teil alle offenen Rückfragen inklusive eines von der KI vorformulierten Frageentwurfs für das jeweilige Studio aufgelistet werden. Ganz am Ende wird der gesamte Bericht zusätzlich im reinen JSON-Format ausgegeben, damit die Daten problemlos an andere Systeme weitergeleitet werden können.
 
-models.py: 
+**models.py:**
 
 In models.py werden mithilfe der Bibliothek Pydantic die festen Datenstrukturen (Baupläne) für das gesamte Bestellsystem definiert, damit die KI und der restliche Python-Code sicher und fehlerfrei zusammenarbeiten können. Diese sogenannten Datenmodelle legen nicht nur exakt fest, welche Felder existieren und welchen Datentyp sie haben müssen (wie Text, Ganzzahl oder Wahrheitswert), sondern geben dem Sprachmodell über integrierte Beschreibungen (Field) auch direkte Handlungsanweisungen. So weiß die KI genau, dass sie Produktnamen auf Deutsch standardisieren und Einheiten im Singular (wie „Packung“ oder „Rolle“) ausgeben muss.
 
@@ -279,7 +279,7 @@ Der erste Teil der Datei widmet sich der Erfassung der Rohdaten durch die KI und
 Im zweiten Teil der Datei werden schließlich die Strukturen für die fertige Auswertung und den Abschlussbericht festgelegt. Die Klasse AggregatedOrderLine definiert eine zusammengefasste Bestellzeile für die spätere Gesamttabelle, bestehend aus Artikelname, Einheit, einer Liste aller bestellenden Studios sowie der berechneten Gesamtmenge (total_quantity), die durch die Regel ge=0 garantiert nicht negativ sein kann. Abschließend führt ProcessedOrderReport diese gültigen, summierten Bestellungen (valid_aggregated_orders) und die Liste der noch offenen Rückfragen (pending_clarifications) in einem einzigen Objekt zusammen, das main.py am Ende als Tabelle und JSON ausgibt.
 
 
-processor.py: 
+**processor.py:**
 
 In processor.py findet die eigentliche Geschäftslogik statt, indem die von der KI ausgelesenen Rohdaten mithilfe von klassischem Python-Code sortiert, zusammengerechnet und gefiltert werden. Die Funktion aggregate_orders nimmt das strukturierte KI-Ergebnis (OrderExtractionResult) entgegen und bereitet zunächst ein spezielles Wörterbuch (defaultdict) zum Gruppieren der gültigen Artikel sowie eine leere Liste für unvollständige Bestellungen vor. Danach durchläuft das Programm in einer Schleife jeden einzelnen Bestellposten und prüft streng, ob das Kontrollfeld is_complete wahr ist und sowohl eine Menge als auch eine Verpackungseinheit vorliegen.
 
@@ -287,7 +287,7 @@ Wenn alle Angaben vollständig sind, bildet der Code aus dem bereinigten Artikel
 
 Im letzten Schritt wandelt die Funktion die gesammelten Gruppen in saubere, nach dem Bauplan aus models.py geprüfte Objekte (AggregatedOrderLine) um. Abschließend verpackt sie sowohl diese fertigen, summierten Bestellzeilen als auch die offenen Rückfragen in das übergeordnete Berichtsobjekt ProcessedOrderReport und gibt dieses an main.py zurück, wo es am Ende als übersichtliche Tabelle und JSON ausgegeben wird.
 
-sample_order_messages.py: 
+**sample_order_messages.py:**
 
 In sample_order_messages.py sind realistische, unstrukturierte Beispielnachrichten verschiedener Studios hinterlegt, die als Testdaten für den gesamten Programmablauf dienen. Die Variable SAMPLE_MESSAGES ist eine Python-Liste mit drei Freitext-Bestellungen aus den Hamburger Standorten Innenstadt, Eimsbüttel und Wandsbek, die genau so aus einem echten Chat oder einer E-Mail stammen könnten. Diese Texte dienen als Eingabematerial, um zu testen, wie zuverlässig das Groq-Sprachmodell menschliche Umgangssprache in strukturierte Daten übersetzen kann.
 
@@ -297,7 +297,7 @@ Im Zusammenspiel mit dem restlichen System sorgt genau diese Mischung für einen
 
 tests: 
 
-test_processor.py: 
+**test_processor.py:** 
 
 In test_processor.py befindet sich ein automatisierter Softwaretest (Unit-Test), der die Berechnungs- und Filterlogik aus processor.py ganz ohne echte KI-Anfrage überprüft. Dazu erstellt die Testfunktion test_aggregation_and_exclusion zunächst künstliche Testdaten (mock_extraction), die genau so aussehen, als kämen sie direkt vom Groq-Sprachmodell. Dieses fiktive Ergebnis enthält vier Bestellposten: zweimal vollständige Nitrilhandschuhe M (3 und 2 Packungen), einmal vollständige Kochsalzlösung aus Wandsbek (2 Flaschen) sowie eine unvollständige Bestellung für Kochsalzlösung aus Eimsbüttel, bei der die Menge fehlt (quantity=None, is_complete=False).
 
