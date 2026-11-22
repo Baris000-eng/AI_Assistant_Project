@@ -5,7 +5,7 @@ from src.processor import aggregate_orders
 from src.sample_order_messages import SAMPLE_MESSAGES
 
 def main():
-    print("Extracting structured order items via Groq API (qwen/qwen3.8-27b)...")
+    print("Extracting structured order items via the Groq API (qwen/qwen3.8-27b Large Language Model (LLM))...")
     extracted_data = extract_orders_from_messages(SAMPLE_MESSAGES)
 
     print("Extracted Order Data: "+str(extracted_data.model_dump_json(indent=2)))

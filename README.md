@@ -1,4 +1,4 @@
-# WAXCAT AI Challenge – KI-Assistent für Materialbestellungen & Use-Case-Skizze
+# WAXCAT KI Projekt – KI-Assistent für Materialbestellungen & Use-Case-Skizze
 
 Dieses Projekt enthält meine vollständigen Lösungen für die beiden praxisnahen Testaufgaben im Rahmen meiner Bewerbung bei **WAXCAT**:
 * **Aufgabe 1:** Ein modularer, lauffähiger Python-Prototyp zur automatisierten Verarbeitung, Validierung und Aggregation von Materialbestellungen aus mehreren WAXCAT-Studios (`src/` & `tests/`).
@@ -13,7 +13,7 @@ Dieses Projekt enthält meine vollständigen Lösungen für die beiden praxisnah
 Um höchste Zuverlässigkeit im operativen Studio-Alltag zu gewährleisten, trennt der Prototyp strikt zwischen **probabilistischer Sprachverarbeitung (LLM)** und **deterministischer Geschäftslogik (Python)**. Sprachmodelle eignen sich ideal zum Verstehen und Strukturieren unordentlicher Freitexte, während reiner Python-Code bei Arithmetik und strengen Filterregeln 100 % verlässlich arbeitet.
 
 ### A. KI-Schicht (`src/extractor.py`) – Semantisches Parsing & Normalisierung
-* **Modell & Provider:** `llama-3.3-70b-versatile` über die **Groq API** (`groq` Python SDK) im deterministischen JSON-Modus (`response_format={"type": "json_object"}`), validiert durch Pydantic (`OrderExtractionResult`).
+* **Modell & Provider:** `qwen/qwen3.8-27b` über die **Groq API** (`groq` Python SDK) im deterministischen JSON-Modus (`response_format={"type": "json_object"}`), validiert durch Pydantic (`OrderExtractionResult`).
 * **Aufgaben der KI:**
   1. **Entitätserkennung:** Extrahiert Studio-Standort, Artikelname, Menge und Einheit aus natürlichen Nachrichten.
   2. **Erkennung unvollständiger Angaben:** Erkennt, wenn Menge oder Einheit fehlen (z. B. *„und noch Kochsalzlösung“* in Eimsbüttel). Durch explizite Prompt-Regeln wird das Modell angewiesen, keine Mengen zu erraten (`quantity=null`), sondern `is_complete=False` zu setzen.
@@ -41,7 +41,7 @@ Damit im Alltag keine fehlerhaften Bestellungen ausgelöst werden, greifen vier 
 
 ---
 
-# Waxcat KI-basierte Bestellextraktions- & Verarbeitungspipeline
+## Waxcat KI-basierte Bestellextraktions- & Verarbeitungspipeline
 
 Eine KI-basierte Pipeline zur Extraktion und Aggregation von Bestellungen, entwickelt mit Python, Pydantic und Groq. Sie wandelt unstrukturierte Kundenbestellnachrichten in validierte, strukturierte Datenmodelle um und fasst Bestellpositionen zusammen.
 
@@ -56,7 +56,7 @@ Waxcat_KI_Projekt/
 │   ├── models.py                  # Pydantic-Datenschemata
 │   ├── processor.py               # Logik zur Bestellaggregation und -verarbeitung
 │   └── sample_order_messages.py   # Beispielhafte Eingabenachrichten
-├── test/
+├── tests/
 │   └── test_processor.py          # Unit-Tests für die Bestellverarbeitung
 ├── .env                           # Umgebungsvariablen (API-Schlüssel)
 ├── .gitignore                     # Von Git ignorierte Dateien und Ordner
@@ -114,7 +114,7 @@ python -m pytest
 Um eine bestimmte Testdatei mit ausführlicher Ausgabe zu starten:
 
 ```bash
-python -m pytest -v test/test_processor.py
+python -m pytest -v tests/test_processor.py
 ```
 
 ## 6. Virtuelle Umgebung deaktivieren
@@ -132,7 +132,7 @@ Wenn du mit der Arbeit fertig bist, kannst du die virtuelle Umgebung wieder verl
 
 Das Ergebnis von der Aufgabe 1: 
 
-Extracting structured items via Groq LLM...
+Extracting structured order items via the Groq API (qwen/qwen3.8-27b Large Language Model (LLM))...
 Extracted Order Data: {
   "items": [
     {
@@ -258,7 +258,7 @@ extractor.py:
 
 In diesem Modul extractor.py definiert system_prompt über die Rolle "system" die festen Arbeitsanweisungen des Modells, seine Domänen-Persona, das verbindliche Ausgabeformat sowie die Regeln für Sonderfälle, während user_content über die Rolle "user" die dynamischen Eingabedaten des jeweiligen Aufrufs – also die formatierte Liste der rohen Studio-Nachrichten – übergibt. Innerhalb des system_prompt legt die Persona als Operations-Assistenz für die WAXCAT-Studios in Hamburg den fachlichen Kontext und die Standardisierung fest (einheitliche Studio-Namen wie 'Innenstadt', 'Eimsbüttel' und 'Wandsbek' sowie saubere Produktnamen wie 'Nitrilhandschuhe M', 'Tape' und 'Kochsalzlösung'), fügt das direkt aus deinem Pydantic-Modell erzeugte OrderExtractionResult-JSON-Schema ein und erzwingt strenge Regeln zur Datenqualität: Fehlende Mengen dürfen nicht erraten werden, unvollständige Angaben (wenn Menge oder Einheit fehlt) müssen mit quantity=null, unit=null und is_complete=false markiert werden, und für unvollständige Einträge wird automatisch eine höfliche, prägnante deutsche Rückfrage an das jeweilige Studio unter Nennung bekannter Standardeinheiten (wie z. B. Flaschen) formuliert. Im Gegensatz dazu bleibt user_content rein datenorientiert ("Process the following studio messages:\n- ..."), sodass stabile Verhaltensregeln sauber von wechselnden Chat-Nachrichten getrennt sind und OrderExtractionResult.model_validate_json(raw_json) das zurückgegebene JSON zuverlässig validieren kann.
 
-Der Parameter temperature=0.0 weist das Modell an, bei jedem Generierungsschritt strikt das Token mit der höchsten Wahrscheinlichkeit auszuwählen, statt zufällig aus einer breiteren Wahrscheinlichkeitsverteilung zu ziehen, wodurch die Extraktion über mehrere Durchläufe hinweg möglichst deterministisch, konsistent und reproduzierbar bleibt. Gerade bei der strukturierten Erfassung von Materialbestellungen – wo erfundene Mengenangaben, schwankende Produktbezeichnungen oder abweichende JSON-Strukturen direkt zu Fehlbestellungen im Lager führen würden – sorgt minimale Zufälligkeit für verlässliche Ergebnisse, auch wenn temperature=0.0 aufgrund von Hardware- und Backend-Effekten keine zu 100 % bitidentische Ausgabe garantiert. Deshalb arbeitet temperature=0.0 hier gezielt mit response_format={"type": "json_object"} und den expliziten Prompt-Regeln zusammen, damit das Modell bei unklaren Nachrichten nicht rät, sondern saubere null-Werte samt Rückfrage liefert.
+Der Parameter temperature=0.0 weist das Modell an, bei jedem Generierungsschritt strikt das Token mit der höchsten Wahrscheinlichkeit auszuwählen, statt zufällig aus einer breiteren Wahrscheinlichkeitsverteilung zu ziehen, wodurch die Extraktion über mehrere Durchläufe hinweg möglichst deterministisch, konsistent und reproduzierbar bleibt. Gerade bei der strukturierten Erfassung von Materialbestellungen – wo erfundene Mengenangaben, schwankende Produktbezeichnungen oder abweichende JSON-Strukturen direkt zu Fehlbestellungen im Lager führen würden, sorgt minimale Zufälligkeit für verlässliche Ergebnisse, auch wenn temperature=0.0 aufgrund von Hardware- und Backend-Effekten keine zu 100 % bitidentische Ausgabe garantiert. Deshalb arbeitet temperature=0.0 hier gezielt mit response_format={"type": "json_object"} und den expliziten Prompt-Regeln zusammen, damit das Modell bei unklaren Nachrichten nicht rät, sondern saubere null-Werte samt Rückfrage liefert.
 
 Auf Modulebene bereiten die Importe und load_dotenv() zu Beginn die Laufzeitumgebung vor, bevor extract_orders_from_messages aufgerufen wird: os liest den GROQ_API_KEY aus den Umgebungsvariablen, json.dumps(..., indent=2) wandelt OrderExtractionResult.model_json_schema() in gut lesbaren Text für den Prompt um, Groq stellt die Verbindung zur Groq-API her, load_dotenv() lädt während der lokalen Entwicklung die Schlüssel-Wert-Paare aus einer .env-Datei in os.environ, und OrderExtractionResult aus src.models liefert sowohl die Schemadefinition als auch die anschließende Pydantic-Validierung. Die Initialisierung von Groq(api_key=os.getenv("GROQ_API_KEY")) innerhalb der Funktion funktioniert für einfache Skripte problemlos; für höhere Lasten im Produktivbetrieb lässt sich der Client jedoch auch einmalig außerhalb der Funktion instanziieren und um Fehlerbehandlung für fehlende API-Keys sowie ungültige JSON- oder Validierungsantworten ergänzen.
 

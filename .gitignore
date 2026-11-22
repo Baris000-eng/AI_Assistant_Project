@@ -4,4 +4,5 @@ __pycache__/
 .pytest_cache/
 *.pyc 
 src/__pycache__/
+waxcat_env/
 
