@@ -1,4 +1,4 @@
-# WAXCAT KI Projekt – KI-Assistent für Materialbestellungen & Use-Case-Skizze
+# WAXCAT KI Projekt – KI-Assistent für Materialbestellungen & Auswertung von Kundenfeedback Use-Case-Skizze
 
 Dieses Projekt enthält meine vollständigen Lösungen für die beiden praxisnahen Testaufgaben im Rahmen meiner Bewerbung bei **WAXCAT**:
 * **Aufgabe 1:** Ein modularer, lauffähiger Python-Prototyp zur automatisierten Verarbeitung, Validierung und Aggregation von Materialbestellungen aus mehreren WAXCAT-Studios (`src/` & `tests/`).
