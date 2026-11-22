@@ -196,6 +196,7 @@ Nitrilhandschuhe M        | Packung    | 5      | Innenstadt (3 Packung), Eimsb�
 Tape                      | Rolle      | 3      | Innenstadt (2 Rolle), Wandsbek (1 Rolle)
 Kochsalzlösung            | Flasche    | 2      | Wandsbek (2 Flasche)
 
+
 ============================================================
 OFFENE RÜCKFRAGEN (NICHT IN GESAMTSUMME ENTHALTEN)
 ============================================================
