@@ -253,6 +253,16 @@ JSON-Ausgabe:
   ]
 }
 
+**Output Screenshot 1:** 
+![Output Screenshot 1](images/output_screenshot_1.png)
+
+**Output Screenshot 2:** 
+![Output Screenshot 2](images/output_screenshot_2.png)
+
+**Output Screenshot 3:** 
+![Output Screenshot 3](images/output_screenshot_3.png)
+
+
 src: 
 
 **extractor.py:**
