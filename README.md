@@ -67,9 +67,7 @@ AI_Assistant_Project/
 
 ## 4. Einrichtung & Installation
 
-0. 
-
-  **Um eine lokale Kopie des Repositorys auf deinen Computer herunterzuladen, führe den folgenden Befehl in deinem Terminal aus:**
+0. **Um eine lokale Kopie des Repositorys auf deinen Computer herunterzuladen, führe den folgenden Befehl in deinem Terminal aus:**
    ```bash
    git clone https://github.com/Baris000-eng/AI_Assistant_Project.git
    ```
