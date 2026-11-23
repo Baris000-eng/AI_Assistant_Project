@@ -102,7 +102,7 @@ AI_Assistant_Project/
 
 ## 5. Projekt ausführen
 
-Führe die Anwendung **aus dem Projekt-Hauptverzeichnis (`Waxcat_KI_Projekt/`)** aus:
+Führe die Anwendung **aus dem Projekt-Hauptverzeichnis (`AI_Assistant_Project/`)** aus:
 
 ```bash
 python src/main.py
@@ -110,7 +110,7 @@ python src/main.py
 
 ## Tests ausführen
 
-Führe die Test-Suite **aus dem Projekt-Hauptverzeichnis (`Waxcat_KI_Projekt/`)** mit `pytest` aus:
+Führe die Test-Suite **aus dem Projekt-Hauptverzeichnis (`AI_Assistant_Project/`)** mit `pytest` aus:
 
 ```bash
 python -m pytest
