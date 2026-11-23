@@ -48,7 +48,7 @@ Eine KI-basierte Pipeline zur Extraktion und Aggregation von Bestellungen, entwi
 ## 3. Projektstruktur
 
 ```text
-Waxcat_KI_Projekt/
+AI_Assistant_Project/
 ├── src/
 │   ├── __init__.py
 │   ├── extractor.py               # LLM-basierte Bestellextraktionslogik (Es benutzt "qwen/qwen3.8-27b" GS (LLM) über die Groq API.)
@@ -58,7 +58,7 @@ Waxcat_KI_Projekt/
 │   └── sample_order_messages.py   # Beispielhafte Eingabenachrichten
 ├── tests/
 │   └── test_processor.py          # Unit-Tests für die Bestellverarbeitung
-├── .env                           # Umgebungsvariablen (API-Schlüssel)
+├── .env                           # Umgebungsvariablen (Groq API-Schlüssel)
 ├── .gitignore                     # Von Git ignorierte Dateien und Ordner
 ├── pyproject.toml                 # Paket- & Pytest-Konfiguration
 ├── README.md                      # Projektdokumentation & Installationsanleitung
@@ -67,9 +67,16 @@ Waxcat_KI_Projekt/
 
 ## 4. Einrichtung & Installation
 
+0. 
+
+  **Um eine lokale Kopie des Repositorys auf deinen Computer herunterzuladen, führe den folgenden Befehl in deinem Terminal aus:**
+   ```bash
+   git clone https://github.com/Baris000-eng/AI_Assistant_Project.git
+   ```
+
 1. **In das Hauptverzeichnis des Projekts wechseln:**
    ```bash
-   cd Waxcat_KI_Projekt
+   cd AI_Assistant_Project
    ```
 
 2. **Virtuelle Umgebung aktivieren:**
