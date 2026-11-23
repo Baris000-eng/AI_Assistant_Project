@@ -118,8 +118,15 @@ python -m pytest
 
 Um eine bestimmte Testdatei mit ausführlicher Ausgabe zu starten:
 
+**Ausführliche Ausgabe (-v, verbose):**
 ```bash
-python -m pytest -v tests/test_processor.py
+python -m pytest -v tests/test_processor.py 
+```
+oder 
+
+**Keine Ausführliche Ausgabe (ohne -v):**
+```bash
+python -m pytest tests/test_processor.py
 ```
 
 ## 6. Virtuelle Umgebung deaktivieren
@@ -272,6 +279,9 @@ JSON-Ausgabe:
 
 **Test Code Output Screenshot 1:** 
 ![Test Code Output Screenshot 1](images/test_code_output_screenshot_1.png)
+
+**Test Code Output Screenshot 2:** 
+![Test Code Output Screenshot 2](images/test_code_output_screenshot_2.png)
 
 src: 
 
